@@ -18,8 +18,13 @@ No "shorting"—you must buy before you sell. You may not buy and sell in the sa
 
 Gotchas
 It is not sufficient to simply take the difference between the highest price and the lowest price, because the highest price may come before the lowest price. You must buy before you sell.
-
 What if the stock value goes down all day? In that case, the best profit will be negative.
+
+You can do this in O(n) time and O(1) space!
+Rough design: 
+  1. Find max stock price (can be done in O(n))
+  2. Consider 1. as sell price and Traverse back from index of max taking difference at each step (again O(n)). The highest difference is maxProfit.
+
 */
 
 import java.util.Arrays;
@@ -29,16 +34,22 @@ public class Solution {
         // write the body of your function here
         //Arrays.sort(arg); array.length=60*7+30=450
         int maxProfit=arg[1]-arg[0];//lets assume
-       	for(int i=0;i<arg.length;i++)
+       	int maxSell=arg[0],indexofMaxSell=0;
+        for(int i=1;i<arg.length;i++)
         { 
-            int buy=arg[i];
-        	for(int j=i+1;j<arg.length;j++){
-                int sell=arg[j];
-            	int profit=sell-buy;
-            	if(profit>maxProfit)
-                    maxProfit=profit;	
-            }    
+            if(arg[i]>maxSell){
+              maxSell=arg[i];
+              indexofMaxSell=i;
+            }  
         }	
+      
+        for(i=indexofMaxSell-1;i>=0;i--){
+          if(maxSell-arg[i] > maxProfit){
+            
+            maxProfit=maxSell-arg[i];
+          }
+        }
+        
         return "Max profit: " + maxProfit;
     }
     public static void main(String[] args) {
